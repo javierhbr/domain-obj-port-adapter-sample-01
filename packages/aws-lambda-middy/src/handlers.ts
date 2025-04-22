@@ -3,16 +3,33 @@ import middy from '@middy/core';
 import httpJsonBodyParser from '@middy/http-json-body-parser';
 import httpErrorHandler from '@middy/http-error-handler';
 import validator from '@middy/validator';
-import { transpileSchema } from '@middy/validator/transpile';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { transactionService } from '@config/dependencies';
-import { CreateTransactionSchema, CreateTransactionDto } from '@dto/CreateTransaction.dto';
+import { CreateTransactionDto } from '@dto/CreateTransaction.dto';
 import { TransactionDetailsDto } from '@dto/TransactionDetails.dto';
 import createHttpError from 'http-errors';
 
+// Define the JSON Schema for validation, wrapped in a function
+const getValidationSchema = () => ({
+  type: 'object',
+  properties: {
+    body: {
+      type: 'object',
+      properties: {
+        amount: { type: 'number', exclusiveMinimum: 0 },
+        currency: { type: 'string', minLength: 3, maxLength: 3 },
+        description: { type: 'string', minLength: 1, maxLength: 255 },
+      },
+      required: ['amount', 'currency', 'description'],
+    },
+  },
+  required: ['body'],
+});
+
 // Base handler for creating a transaction
 const createTransactionBaseHandler = async (
-  event: APIGatewayProxyEvent & { body: CreateTransactionDto } // Type assertion after validation
+  // Type assertion is still useful for type safety within the handler
+  event: APIGatewayProxyEvent & { body: CreateTransactionDto }
 ): Promise<APIGatewayProxyResult> => {
   console.log('[Middy] Received validated body for createTransaction:', event.body);
 
@@ -84,9 +101,10 @@ const getTransactionDetailsBaseHandler = async (
 
 // Apply Middy middleware
 export const createTransactionHandler = middy()
-  .use(httpJsonBodyParser()) // Parses JSON request body
-  .use(validator({eventSchema: transpileSchema(CreateTransactionSchema)})) // Validates the body against Zod schema
-  .use(httpErrorHandler()) // Handles http-errors thrown by the handler or other middleware
+  .use(httpJsonBodyParser()) // Parses JSON request body into event.body
+  // Use a function that returns the schema object
+  .use(validator({ eventSchema: getValidationSchema }))
+  .use(httpErrorHandler()) // Handles http-errors
   .handler(createTransactionBaseHandler);
 
 export const getTransactionDetailsHandler = middy()

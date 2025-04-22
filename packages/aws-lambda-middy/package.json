@@ -4,31 +4,34 @@
   "description": "Middy AWS Lambda implementation",
   "main": "dist/handlers.js",
   "scripts": {
-    "build": "tsc -b && pnpm copy-templates",
+    "build": "pnpm clean && pnpm build:bundle && pnpm copy-templates",
+    "build:bundle": "pnpm exec esbuild src/handlers.ts --bundle --outfile=dist/handlers.js --platform=node --target=node18 --format=cjs --external:aws-sdk",
+    "clean": "rm -rf dist",
     "copy-templates": "cp template.yaml dist/",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "core-domain": "workspace:*",
-    "@types/aws-lambda": "^8.10.136",
     "@middy/core": "^5.3.2",
-    "@middy/http-json-body-parser": "^5.3.2",
     "@middy/http-error-handler": "^5.3.2",
+    "@middy/http-json-body-parser": "^5.3.2",
     "@middy/validator": "^5.3.2",
+    "@types/aws-lambda": "^8.10.136",
+    "core-domain": "workspace:*",
     "http-errors": "^2.0.0",
-    "zod": "^3.22.4",
+    "tsconfig-paths": "^4.2.0",
     "uuid": "^9.0.1",
-    "tsconfig-paths": "^4.2.0"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
-    "eslint": "^8.57.0",
+    "@types/express": "^4.17.21",
+    "@types/http-errors": "^2.0.4",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
-    "@types/uuid": "^9.0.8",
-    "@types/http-errors": "^2.0.4",
+    "esbuild": "^0.25.2",
+    "eslint": "^8.57.0",
     "express": "^4.19.2",
-    "@types/express": "^4.17.21"
+    "typescript": "^5.3.3"
   }
 }

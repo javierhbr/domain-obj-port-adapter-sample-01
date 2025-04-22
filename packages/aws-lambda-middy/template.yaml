@@ -9,16 +9,13 @@ Globals:
     MemorySize: 128
     Runtime: nodejs18.x
     Handler: handlers.placeholder # Will be overridden
-    Environment:
-      Variables:
-        NODE_PATH: "./:/opt/node_modules"
 
 Resources:
   CreateTransactionFunctionMiddy:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: dist/handlers.createTransactionHandler
+      CodeUri: dist
+      Handler: handlers.createTransactionHandler
       Events:
         ApiEvent:
           Type: Api
@@ -29,8 +26,8 @@ Resources:
   GetTransactionDetailsFunctionMiddy:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: dist/handlers.getTransactionDetailsHandler
+      CodeUri: dist
+      Handler: handlers.getTransactionDetailsHandler
       Events:
         ApiEvent:
           Type: Api
@@ -40,5 +37,5 @@ Resources:
 
 Outputs:
   ApiUrlMiddy:
-    Description: "API Gateway endpoint URL for Prod stage (Middy)"
+    Description: "API Gateway endpoint URL for Middy Lambda"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

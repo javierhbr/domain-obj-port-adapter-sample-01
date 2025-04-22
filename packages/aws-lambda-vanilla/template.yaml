@@ -9,16 +9,16 @@ Globals:
     MemorySize: 128
     Runtime: nodejs18.x
     Handler: handlers.placeholder # Will be overridden
-    Environment:
-      Variables:
-        NODE_PATH: "./:/opt/node_modules"
+    # Environment:
+    #   Variables:
+    #     NODE_PATH: "./:/opt/node_modules" # Removed NODE_PATH as bundling handles resolution
 
 Resources:
   CreateTransactionFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: dist/handlers.createTransactionHandler
+      CodeUri: dist # Changed CodeUri to point to dist
+      Handler: handlers.createTransactionHandler # Handler path relative to CodeUri
       Events:
         ApiEvent:
           Type: Api
@@ -29,8 +29,8 @@ Resources:
   GetTransactionDetailsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: dist/handlers.getTransactionDetailsHandler
+      CodeUri: dist # Changed CodeUri to point to dist
+      Handler: handlers.getTransactionDetailsHandler # Handler path relative to CodeUri
       Events:
         ApiEvent:
           Type: Api

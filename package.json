@@ -13,8 +13,11 @@
     "start:middy": "node -r tsconfig-paths/register packages/aws-lambda-middy/dist/server.js",
     "start:nestjs": "node -r tsconfig-paths/register packages/aws-lambda-nestjs/dist/main.js",
     "dev:vanilla": "TS_NODE_PROJECT=packages/aws-lambda-vanilla/tsconfig.json ts-node -r tsconfig-paths/register packages/aws-lambda-vanilla/src/server.ts",
-    "dev:middy": "TS_NODE_PROJECT=packages/aws-lambda-middy/tsconfig.json ts-node -r tsconfig-paths/register packages/aws-lambda-middy/src/server.ts",
+    "dev:middy": "TS_NODE_PROJECT=packages/aws-lambda-middy/tsconfig.json node -r ts-node/register -r tsconfig-paths/register packages/aws-lambda-middy/src/server.ts",
     "dev:nestjs": "pnpm --filter aws-lambda-nestjs start:dev",
+    "sam:start:vanilla": "pnpm build:vanilla && cd packages/aws-lambda-vanilla && sam local start-api -p 3001",
+    "sam:start:middy": "pnpm build:middy && cd packages/aws-lambda-middy && sam local start-api -p 3002",
+    "sam:start:nestjs": "pnpm build:nestjs && cd packages/aws-lambda-nestjs && sam local start-api -p 3003",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test"
   },
