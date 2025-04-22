@@ -40,17 +40,8 @@ if (require.main === module) {
   });
 }
 
-// Export the handler for AWS Lambda
-export const handler: Handler = async (
-  event: any,
-  context: Context,
-  callback: Callback,
-) => {
-  console.log('[NestJS] Received Lambda event:', JSON.stringify(event));
-  if (!server) {
-    console.log('[NestJS] Initializing server for Lambda...');
-    server = await bootstrapLambda();
-    console.log('[NestJS] Server initialized for Lambda.');
-  }
+// Lambda handler
+export const handler = async (event: any, context: Context, callback: Callback) => {
+  server = server ?? (await bootstrapLambda());
   return server(event, context, callback);
 };

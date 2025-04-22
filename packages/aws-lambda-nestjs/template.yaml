@@ -8,16 +8,17 @@ Globals:
     Timeout: 20 # NestJS might need a bit more time initially
     MemorySize: 256 # NestJS might need more memory
     Runtime: nodejs18.x
-    Environment:
-      Variables:
-        NODE_PATH: ".:/opt/node_modules"
+    # Environment variables are now unnecessary since we're bundling
+    # Environment:
+    #   Variables:
+    #     NODE_PATH: ".:/opt/node_modules"
 
 Resources:
   NestJsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: .
-      Handler: dist/main.handler # Points to the exported handler in main.ts
+      CodeUri: dist # Point to the dist directory
+      Handler: lambda.handler # Point to the bundled handler file
       Events:
         ApiEvent:
           Type: Api
