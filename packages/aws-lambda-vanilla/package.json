@@ -1,0 +1,28 @@
+{
+  "name": "aws-lambda-vanilla",
+  "version": "1.0.0",
+  "description": "Vanilla AWS Lambda implementation",
+  "main": "dist/handlers.js",
+  "scripts": {
+    "build": "tsc -b && pnpm copy-templates",
+    "copy-templates": "cp template.yaml dist/",
+    "lint": "eslint . --ext .ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "core-domain": "workspace:*",
+    "@types/aws-lambda": "^8.10.136",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@types/uuid": "^9.0.8",
+    "express": "^4.19.2",
+    "@types/express": "^4.17.21"
+  }
+}

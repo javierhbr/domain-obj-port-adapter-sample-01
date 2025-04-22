@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  nestjs-lambda
+
+Globals:
+  Function:
+    Timeout: 20 # NestJS might need a bit more time initially
+    MemorySize: 256 # NestJS might need more memory
+    Runtime: nodejs18.x
+    Environment:
+      Variables:
+        NODE_PATH: ".:/opt/node_modules"
+
+Resources:
+  NestJsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: dist/main.handler # Points to the exported handler in main.ts
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  ApiUrlNestJs:
+    Description: "API Gateway endpoint URL for Prod stage (NestJS)"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

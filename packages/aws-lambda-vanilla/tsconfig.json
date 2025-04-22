@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@adapters/*": ["src/adapters/*"],
+      "@handlers/*": ["src/handlers/*"],
+      "@dto/*": ["src/dto/*"],
+      "@config/*": ["src/config/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    { "path": "../core-domain" }
+  ]
+}

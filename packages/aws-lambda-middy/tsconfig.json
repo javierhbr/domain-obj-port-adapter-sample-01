@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "module": "CommonJS", // Revert back to CommonJS
+    "moduleResolution": "Node", // Revert back to Node
+    "baseUrl": "./",
+    "paths": {
+      "core-domain": ["../core-domain/src"],
+      "core-domain/*": ["../core-domain/src/*"],
+      "@config/*": ["src/config/*"],
+      "@dto/*": ["src/dto/*"],
+      "@adapters/*": ["src/adapters/*"]
+    }
+  },
+  "references": [
+    { "path": "../core-domain" }
+  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

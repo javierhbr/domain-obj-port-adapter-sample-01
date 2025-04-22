@@ -1,0 +1,67 @@
+### Variables
+# Adjust ports if necessary based on your setup/logs
+@vanilla_host = http://localhost:3001
+@middy_host = http://localhost:3002
+@nestjs_host = http://localhost:3000
+
+# Variable to store the ID from a create response
+# You can manually set this after running a POST request, or use REST Client features
+@transactionId = 4ff912d2-0c5a-4f60-b0c5-0e44e00c53c6
+
+###
+# --------------------
+# Create Transactions
+# --------------------
+
+### Create Transaction (Vanilla)
+# @name createVanillaTransaction
+POST {{vanilla_host}}/transactions
+Content-Type: application/json
+
+{
+  "amount": 123.45,
+  "currency": "USD",
+  "description": "Test transaction via Vanilla (HTTP File)"
+}
+
+### Create Transaction (Middy)
+# @name createMiddyTransaction
+POST {{middy_host}}/transactions
+Content-Type: application/json
+
+{
+  "amount": 50.00,
+  "currency": "EUR",
+  "description": "Test transaction via Middy (HTTP File)"
+}
+
+### Create Transaction (NestJS)
+# @name createNestjsTransaction
+POST {{nestjs_host}}/transactions
+Content-Type: application/json
+
+{
+  "amount": 99.99,
+  "currency": "GBP",
+  "description": "Test transaction via NestJS (HTTP File)"
+}
+
+###
+# --------------------
+# Get Transaction Details
+# --------------------
+# NOTE: Before running these, run one of the POST requests above
+# and copy the resulting "id" into the @transactionId variable at the top of this file.
+# Alternatively, REST Client extensions often allow capturing response values:
+# Example (after a POST request):
+# > {% client.global.set("transactionId", response.body.id); %}
+
+# "41710f45-d416-4dae-b678-288b7aba25b2"
+### Get Transaction Details (Vanilla)
+GET {{vanilla_host}}/transactions/{{transactionId}}/details
+
+### Get Transaction Details (Middy)
+GET {{middy_host}}/transactions/{{transactionId}}/details
+
+### Get Transaction Details (NestJS)
+GET {{nestjs_host}}/transactions/{{transactionId}}/details

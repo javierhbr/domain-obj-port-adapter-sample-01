@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  middy-lambda
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs18.x
+    Handler: handlers.placeholder # Will be overridden
+    Environment:
+      Variables:
+        NODE_PATH: "./:/opt/node_modules"
+
+Resources:
+  CreateTransactionFunctionMiddy:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: dist/handlers.createTransactionHandler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /transactions
+            Method: post
+
+  GetTransactionDetailsFunctionMiddy:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: dist/handlers.getTransactionDetailsHandler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /transactions/{transactionId}/details
+            Method: get
+
+Outputs:
+  ApiUrlMiddy:
+    Description: "API Gateway endpoint URL for Prod stage (Middy)"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

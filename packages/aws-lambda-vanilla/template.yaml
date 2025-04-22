@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  vanilla-lambda
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs18.x
+    Handler: handlers.placeholder # Will be overridden
+    Environment:
+      Variables:
+        NODE_PATH: "./:/opt/node_modules"
+
+Resources:
+  CreateTransactionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: dist/handlers.createTransactionHandler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /transactions
+            Method: post
+
+  GetTransactionDetailsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: dist/handlers.getTransactionDetailsHandler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /transactions/{transactionId}/details
+            Method: get
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
