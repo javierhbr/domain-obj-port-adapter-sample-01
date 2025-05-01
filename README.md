@@ -11,15 +11,16 @@ The goal is to isolate the core business logic from the delivery mechanism (AWS 
     *   Defines interfaces (`ports`) for external dependencies (e.g., `TransactionRepository`).
     *   Contains the core business logic (`TransactionService`) which depends only on the ports, not on concrete implementations.
 
-2.  **Lambda Packages (`aws-lambda-*`)**: These are the delivery mechanisms (the adapters).
+2.  **Lambda and API Packages**: These are the delivery mechanisms (the adapters).
     *   Each package implements the HTTP API endpoints.
     *   They provide concrete implementations (`adapters`) for the ports defined in `core-domain` (e.g., `InMemoryTransactionRepository`).
     *   They define their own Data Transfer Objects (DTOs) for request/response validation and mapping.
     *   They inject the adapter implementation into the `TransactionService` from `core-domain` to execute the business logic.
-    *   Different frameworks (or lack thereof) are used:
+    *   Different frameworks and programming paradigms are used:
         *   `aws-lambda-vanilla`: No framework, manual DI, Zod for validation.
         *   `aws-lambda-middy`: Uses Middy middleware for request parsing, validation (Zod via `@middy/validator`), and error handling.
         *   `aws-lambda-nestjs`: Uses the NestJS framework for structure, DI, validation (`class-validator`), and request handling.
+        *   `functional-fastify`: Uses JavaScript functional programming with Fastify, Ajv for validation, and pure function composition.
 
 ## Monorepo Setup (pnpm Workspaces)
 
@@ -52,7 +53,7 @@ This will run the `build` script defined in each package's `package.json`.
 
 ## Running the Services Locally
 
-You can run each Lambda implementation locally using either AWS SAM or a direct Node.js execution method (using Express wrappers for Vanilla/Middy, and NestJS CLI/Node for NestJS).
+You can run each implementation locally using either AWS SAM or a direct Node.js execution method (using Express wrappers for Vanilla/Middy, NestJS CLI/Node for NestJS, and Node.js for Functional-Fastify).
 
 **Important:** Run each service in a separate terminal.
 
@@ -103,10 +104,25 @@ You can run each Lambda implementation locally using either AWS SAM or a direct 
     sam local start-api -p 3003
     ```
     Runs on `http://localhost:3003`.
+    
+### 4. Functional Fastify (`functional-fastify`)
+
+*   **Without SAM (Node.js):**
+    *   Standard mode: `pnpm start:fastify` (Runs on `http://localhost:3004`)
+    *   Development (watch mode): `pnpm dev:fastify` (Runs on `http://localhost:3004`)
+
+*   **With SAM:**
+    ```bash
+    # From root directory
+    pnpm build:fastify
+    cd packages/functional-fastify
+    sam local start-api -p 3004
+    ```
+    Runs on `http://localhost:3004`.
 
 ## API Endpoints
 
-All three Lambda implementations expose the same two endpoints:
+All four implementations expose the same two endpoints:
 
 1.  **Create Transaction:**
     *   `POST /transactions`
@@ -147,6 +163,23 @@ All three Lambda implementations expose the same two endpoints:
 
 ## Testing the Endpoints
 
-Refer to the `README.md` file within each `packages/aws-lambda-*` directory for specific `curl` examples tailored to that implementation's default port.
+Refer to the `README.md` file within each package directory for specific `curl` examples tailored to that implementation's default port.
 
 You can also use the `requests.http` file in the root directory with the [VS Code REST Client extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) for convenient testing.
+
+## Programming Paradigms Comparison
+
+This monorepo showcases different programming approaches while working with the same core domain:
+
+1. **Object-Oriented (Class-Based)**
+   * `aws-lambda-vanilla`, `aws-lambda-middy`, and `aws-lambda-nestjs` use TypeScript classes
+   * Dependency injection through constructors
+   * Interface implementation through class implementation
+
+2. **Functional Programming**
+   * `functional-fastify` uses JavaScript functions and pure function composition
+   * Avoids classes and mutations where possible
+   * Dependency injection through function parameters and closures
+   * Promotes composition over inheritance
+
+Each approach demonstrates a valid way to fulfill the same port contracts defined in the core domain, showing the flexibility of the ports and adapters architecture.

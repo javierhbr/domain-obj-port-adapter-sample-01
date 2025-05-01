@@ -44,6 +44,17 @@ Okay, here are `curl` examples for testing your locally running services.
     }'
     ```
 
+*   **Functional Fastify (Port 3004):**
+    ```bash
+    curl -X POST http://localhost:3004/transactions \
+    -H "Content-Type: application/json" \
+    -d '{
+      "amount": 75.25,
+      "currency": "CAD",
+      "description": "Test transaction via Functional Fastify"
+    }'
+    ```
+
 **Note:** The response from the POST request should include the `id` of the newly created transaction. You'll need this ID for the next step.
 
 ---
@@ -65,6 +76,11 @@ Replace `{transactionId}` with an actual ID obtained from a previous POST reques
 *   **NestJS (Port 3000):**
     ```bash
     curl http://localhost:3000/transactions/{transactionId}/details
+    ```
+
+*   **Functional Fastify (Port 3004):**
+    ```bash
+    curl http://localhost:3004/transactions/{transactionId}/details
     ```
 
 ---
