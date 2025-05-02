@@ -55,6 +55,17 @@ Okay, here are `curl` examples for testing your locally running services.
     }'
     ```
 
+*   **Functional Middy (Port 3005):**
+    ```bash
+    curl -X POST http://localhost:3005/transactions \
+    -H "Content-Type: application/json" \
+    -d '{
+      "amount": 88.50,
+      "currency": "JPY",
+      "description": "Test transaction via Functional Middy"
+    }'
+    ```
+
 **Note:** The response from the POST request should include the `id` of the newly created transaction. You'll need this ID for the next step.
 
 ---
@@ -81,6 +92,11 @@ Replace `{transactionId}` with an actual ID obtained from a previous POST reques
 *   **Functional Fastify (Port 3004):**
     ```bash
     curl http://localhost:3004/transactions/{transactionId}/details
+    ```
+
+*   **Functional Middy (Port 3005):**
+    ```bash
+    curl http://localhost:3005/transactions/{transactionId}/details
     ```
 
 ---

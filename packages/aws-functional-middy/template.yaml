@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  functional-middy-lambda
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs18.x
+    Handler: handlers.placeholder # Will be overridden
+
+Resources:
+  CreateTransactionFunctionFunctionalMiddy:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist
+      Handler: handlers.createTransactionHandler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /transactions
+            Method: post
+
+  GetTransactionDetailsFunctionFunctionalMiddy:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist
+      Handler: handlers.getTransactionDetailsHandler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /transactions/{transactionId}/details
+            Method: get
+
+Outputs:
+  ApiFunctionalMiddyUrl:
+    Description: "API Gateway endpoint URL for Functional Middy Lambda"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

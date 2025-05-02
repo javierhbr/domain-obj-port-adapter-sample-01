@@ -21,6 +21,7 @@ The goal is to isolate the core business logic from the delivery mechanism (AWS 
         *   `aws-lambda-middy`: Uses Middy middleware for request parsing, validation (Zod via `@middy/validator`), and error handling.
         *   `aws-lambda-nestjs`: Uses the NestJS framework for structure, DI, validation (`class-validator`), and request handling.
         *   `functional-fastify`: Uses JavaScript functional programming with Fastify, Ajv for validation, and pure function composition.
+        *   `aws-functional-middy`: Uses JavaScript functional programming with Middy middleware, Ajv for validation, and function composition.
 
 ## Monorepo Setup (pnpm Workspaces)
 
@@ -119,6 +120,21 @@ You can run each implementation locally using either AWS SAM or a direct Node.js
     sam local start-api -p 3004
     ```
     Runs on `http://localhost:3004`.
+    
+### 5. Functional Middy (`aws-functional-middy`)
+
+*   **Without SAM (Node.js):**
+    *   Standard mode: `pnpm start:functional-middy` (Runs on `http://localhost:3005`)
+    *   Development (watch mode): `pnpm dev:functional-middy` (Runs on `http://localhost:3005`)
+
+*   **With SAM:**
+    ```bash
+    # From root directory
+    pnpm build:functional-middy
+    cd packages/aws-functional-middy
+    sam local start-api -p 3005
+    ```
+    Runs on `http://localhost:3004`.
 
 ## API Endpoints
 
@@ -177,7 +193,7 @@ This monorepo showcases different programming approaches while working with the 
    * Interface implementation through class implementation
 
 2. **Functional Programming**
-   * `functional-fastify` uses JavaScript functions and pure function composition
+   * `functional-fastify` and `aws-functional-middy` use JavaScript functions and pure function composition
    * Avoids classes and mutations where possible
    * Dependency injection through function parameters and closures
    * Promotes composition over inheritance
